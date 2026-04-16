@@ -31,6 +31,40 @@ public class BSTreeNode<E>
 	public BSTreeNode<E> getRight(){
 		return this.right;
 	}
-	
+	public boolean hasLeftChild() {
+		if(this.left == null){
+			return false;
+		}
+		return true;
+	}
+	public boolean hasRightChild() {
+		if(this.right == null){
+			return false;
+		}
+		return true;
+	}
+	public boolean isLeaf() {
+		if(this.left == null && this.right == null){
+			return true;
+		}
+		return false;
+	}
+	public int getHeight(){
+		int leftHeight;
+		int rightHeight;
+		if(this.left == null) {
+			leftHeight = 0;
+		}
+		else {
+			leftHeight = left.getHeight();
+		}
+		if(right == null) {
+			rightHeight = 0;
+		}
+		else {
+			rightHeight = this.right.getHeight();
+		}
+		return 1 + Math.max(leftHeight, rightHeight);
+	}
 	
 }
