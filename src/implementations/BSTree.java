@@ -8,7 +8,7 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>
 	private BSTreeNode<E> root;
 	
 	public BSTree() {
-		root = null;
+		this.root = null;
 	}
 	public BSTree(E element) {
 		this.root = new BSTreeNode<E>(element);
@@ -17,7 +17,7 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>
 	@Override
 	public BSTreeNode<E> getRoot() throws NullPointerException { 
 		
-		if (root == null) {
+		if (this.root == null) {
 			throw new NullPointerException();
 			
 		}
@@ -26,12 +26,12 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>
 
 	@Override
 	public int getHeight() {
-		return (root == null) ? 0 : root.getHeight();
+		return (this.root == null) ? 0 : this.root.getHeight();
 	}
 
 	@Override
 	public int size() {
-		return (root == null) ? 0 : root.getNumberNodes();
+		return (this.root == null) ? 0 : this.root.getNumberNodes();
 	}
 
 	@Override

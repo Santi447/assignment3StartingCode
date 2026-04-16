@@ -145,10 +145,10 @@ public class BSTreeNode<E>
 			leftHeight = 0;
 		}
 		else {
-			leftHeight = left.getHeight();
+			leftHeight = this.left.getHeight();
 		}
 		// if there is no right child, its subtree height is 0
-		if(right == null) {
+		if(this.right == null) {
 			rightHeight = 0;
 		}
 		else {
