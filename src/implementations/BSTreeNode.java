@@ -18,4 +18,19 @@ public class BSTreeNode<E>
 		this.left = left;
 		this.right = right;
 	}
+	
+	public E getElement() {
+		return this.element;
+	}
+	public E setElement(E elementToSet) {
+		return this.element = elementToSet;
+	}
+	public BSTreeNode<E> getLeft(){
+		return this.left;
+	}
+	public BSTreeNode<E> getRight(){
+		return this.right;
+	}
+	
+	
 }
