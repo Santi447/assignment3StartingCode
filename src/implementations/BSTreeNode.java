@@ -1,5 +1,5 @@
 /**
- * @author Group sonia: Santiago Pabon, Kaley Wood, Asad Ashrif, Dylan Dang
+ * @author Group sonia: Santiago Pabon, Kaley Wood, Asad Arif, Dylan Dang
  * Southern Alberta Institute of Technology: CPRG 304
  * Assignment 3
  * Created: April 16 2026
