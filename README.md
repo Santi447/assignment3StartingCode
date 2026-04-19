@@ -52,10 +52,10 @@ Example: `java -jar WordTracker.jar res/test1.txt -po -fout.txt`
 
 | Person | Owns | Status |
 |--------|------|--------|
-| 1 — Kaley | `BSTreeNode`, BSTree foundation (`getRoot`, `getHeight`, `size`, `isEmpty`, `clear`) | Done |
-| 2 | `contains`, `search`, `add`, `removeMin`, `removeMax` | TODO |
-| 3 | Iterators (in/pre/post-order), `Word.java`, `WordTracker` core + serialization | TODO |
-| 4 | `WordTracker` CLI parsing + print reports | TODO |
+| 1 — Santiago | `BSTreeNode`, BSTree foundation (`getRoot`, `getHeight`, `size`, `isEmpty`, `clear`) | Done |
+| 2 — Asad | `contains`, `search`, `add`, `removeMin`, `removeMax` | TODO |
+| 3 — Kaley | Iterators (in/pre/post-order), `Word.java`, `WordTracker` core + serialization | TODO |
+| 4 — Dylan | `WordTracker` CLI parsing + print reports | TODO |
 
 Order: **1 → (2 & 3 in parallel) → 4**.
 
