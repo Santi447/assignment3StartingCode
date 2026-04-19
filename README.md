@@ -54,7 +54,7 @@ Example: `java -jar WordTracker.jar res/test1.txt -po -fout.txt`
 |--------|------|--------|
 | 1 — Santiago | `BSTreeNode`, BSTree foundation (`getRoot`, `getHeight`, `size`, `isEmpty`, `clear`) | Done |
 | 2 — Asad | `contains`, `search`, `add`, `removeMin`, `removeMax` | TODO |
-| 3 — Kaley | Iterators (in/pre/post-order), `Word.java`, `WordTracker` core + serialization | TODO |
+| 3 — Kaley | Iterators (in/pre/post-order), `Word.java`, `WordTracker` core + serialization | Done |
 | 4 — Dylan | `WordTracker` CLI parsing + print reports | TODO |
 
 Order: **1 → (2 & 3 in parallel) → 4**.
