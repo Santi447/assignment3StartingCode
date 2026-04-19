@@ -1,0 +1,31 @@
+# Compiled Java output
+bin/
+*.class
+
+# VS Code workspace (user-specific)
+.vscode/
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse runtime/metadata (keep .classpath, .project, .settings shared)
+.metadata/
+.recommenders/
+
+# Build tools (in case anyone runs them)
+target/
+build/
+.gradle/
+.claude/
+
+# Logs and temp files
+*.log
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
