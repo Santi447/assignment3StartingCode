@@ -14,7 +14,6 @@
 package implementations;
 
 import java.io.*;
-import java.sql.SQLOutput;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -56,25 +55,17 @@ public class WordTracker
 		scanFile(wordTree, inputFilePath);
 		saveTree(wordTree);
 
-		// Set up output stream (console or file)
-		PrintStream output = System.out;
-		if (outputFilePath != null) {
-			try {
-				output = new PrintStream(new FileOutputStream(outputFilePath));
-				System.out.println("Exporting report to: " + outputFilePath);
-			} catch (FileNotFoundException e) {
-				System.err.println("Error: could not open output file - " + outputFilePath);
-				System.exit(1);
-			}
+		// Write the report to the requested destination.
+		if (outputFilePath == null) {
+			printReport(wordTree, printFlag, System.out);
+			return;
 		}
 
-		printReport(wordTree, printFlag, output);
-
-		// if writing to a file, also print to console so the user can see output
-		if (outputFilePath != null) {
-			printReport(wordTree, printFlag, System.out);
-		} else {
-			System.out.println("Not exporting file.");
+		try (PrintStream output = new PrintStream(new FileOutputStream(outputFilePath))) {
+			printReport(wordTree, printFlag, output);
+		} catch (FileNotFoundException e) {
+			System.err.println("Error: could not open output file - " + outputFilePath);
+			System.exit(1);
 		}
 	}
 	
@@ -92,9 +83,7 @@ public class WordTracker
 		
 		if (repoFile.exists()) {
 			try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(repoFile))) {
-				BSTree<Word> loadedTree = (BSTree<Word>) in.readObject();
-				System.out.println("Loaded existing word tree from " + REPO_FILE);
-				return loadedTree;
+				return (BSTree<Word>) in.readObject();
 			} catch (IOException | ClassNotFoundException e) {
 				System.err.println("Warning: could not load " + REPO_FILE + ", starting fresh.");
 			}
@@ -183,12 +172,6 @@ public class WordTracker
 	 */
 
 	public static void printReport(BSTree<Word> wordTree, String printFlag, PrintStream output) {
-		switch (printFlag) {
-			case "-pf": output.println("Displaying -pf format"); break;
-			case "-pl": output.println("Displaying -pl format"); break;
-			case "-po": output.println("Displaying -po format"); break;
-		}
-
 		utilities.Iterator<Word> it = wordTree.inorderIterator();
 
 		while (it.hasNext()) {
@@ -199,11 +182,7 @@ public class WordTracker
 			switch (printFlag) {
 
 				case "-pf": {
-					// unique files only
-					ArrayList<String> uniqueFiles = word.getUniqueFileNames();
-					for (String file : uniqueFiles) {
-						sb.append("found in file: ").append(file).append(", ");
-					}
+					sb.append(buildFileListString(word));
 					break;
 				}
 
@@ -226,6 +205,24 @@ public class WordTracker
 	}
 
 	/**
+	 * @param word the Word whose unique file names to format
+	 * @return formatted file list string
+	 */
+	private static String buildFileListString(Word word) {
+		ArrayList<String> uniqueFiles = word.getUniqueFileNames();
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < uniqueFiles.size(); i++) {
+			if (i > 0) {
+				sb.append(", ");
+			}
+			sb.append("found in file: ").append(uniqueFiles.get(i));
+		}
+
+		return sb.toString();
+	}
+
+	/**
 	 * @param word the Word whose occurrences to format
 	 * @return formatted file-and-lines string
 	 */
@@ -243,12 +240,19 @@ public class WordTracker
 
 		for (String file : seen) {
 			sb.append("found in file: ").append(file).append(" on lines: ");
+			boolean firstLine = true;
 			for (int i = 0; i < fileNames.size(); i++) {
 				if (fileNames.get(i).equals(file)) {
-					sb.append(lineNumbers.get(i)).append(",");
+					if (!firstLine) {
+						sb.append(",");
+					}
+					sb.append(lineNumbers.get(i));
+					firstLine = false;
 				}
 			}
-			sb.append(" ");
+			if (!file.equals(seen.get(seen.size() - 1))) {
+				sb.append(" ");
+			}
 		}
 		return sb.toString();
 	}
