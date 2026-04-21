@@ -24,18 +24,6 @@ public class WordTracker
 	
 	/**
 	 * Main entry point.
-	 *
-	 * Usage: java -jar WordTracker.jar <input.txt> -pf|-pl|-po [-f<output.txt>]
-	 *
-	 * Dylan -- this is your section. You need to:
-	 * 1. Parse args[0] as the input file path
-	 * 2. Parse args[1] as the print flag (-pf, -pl, or -po)
-	 * 3. Parse optional args[2] for output file redirect (-f<filename>)
-	 * 4. Validate arguments and print helpful errors if wrong
-	 * 5. Call loadTree(), scanFile(), saveTree() (Kaley's methods)
-	 * 6. Set up output stream (System.out or a file)
-	 * 7. Call your printReport() method with the tree, flag, and output
-	 *
 	 * @param args command-line arguments
 	 */
 	public static void main(String[] args) {
@@ -189,17 +177,6 @@ public class WordTracker
 	
 	/**
 	 * print report method goes here.
-	 *
-	 * Iterate the BST in-order (alphabetical) and print based on the flag:
-	 *   -pf: word + list of files it appears in
-	 *   -pl: word + files + line numbers
-	 *   -po: word + files + line numbers + frequency
-	 *
-	 * Use wordTree.inorderIterator() to get the alphabetical traversal.
-	 * Word has these getters you'll need:
-	 *   getWord(), getFileNames(), getLineNumbers(),
-	 *   getFrequency(), getUniqueFileNames()
-	 *
 	 * @param wordTree  the BST containing all tracked words
 	 * @param printFlag the report type (-pf, -pl, or -po)
 	 * @param output    where to write (System.out or a file stream)
@@ -249,9 +226,6 @@ public class WordTracker
 	}
 
 	/**
-	 * Builds a "found in file: X on lines: 1,2,3, found in file: Y on lines: 4,5,"
-	 * string by grouping occurrences per file in the order they were encountered.
-	 *
 	 * @param word the Word whose occurrences to format
 	 * @return formatted file-and-lines string
 	 */
