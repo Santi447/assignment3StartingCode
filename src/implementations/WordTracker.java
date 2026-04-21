@@ -156,7 +156,7 @@ public class WordTracker
 				
 				for (String token : tokens) {
 					// strip punctuation and convert to lowercase
-					String cleaned = token.replaceAll("[^a-zA-Z']", "").toLowerCase();
+					String cleaned = token.replaceAll("[^a-zA-Z]", "").toLowerCase();
 					
 					// skip empty strings that result from punctuation-only tokens
 					if (cleaned.isEmpty()) {
