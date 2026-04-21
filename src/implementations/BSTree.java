@@ -94,32 +94,141 @@ public class BSTree<E extends Comparable<? super E>> implements BSTreeADT<E>
 
 	@Override
 	public boolean contains(E entry) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return false;
+		if (entry == null) {
+			throw new NullPointerException();
+		}
+		
+		// reuse the search logic and return true only if a matching node exists
+		return search(entry) != null;
 	}
 
 	@Override
 	public BSTreeNode<E> search(E entry) throws NullPointerException {
-		// TODO Auto-generated method stub
+		if (entry == null) {
+			throw new NullPointerException();
+		}
+		
+		BSTreeNode<E> current = this.root;
+		
+		while (current != null) {
+			// compare against the current node to decide whether to stop, go left, or go right
+			int comparison = entry.compareTo(current.getElement());
+			
+			if (comparison == 0) {
+				return current;
+			}
+			else if (comparison < 0) {
+				current = current.getLeft();
+			}
+			else {
+				current = current.getRight();
+			}
+		}
+		
 		return null;
 	}
 
 	@Override
 	public boolean add(E newEntry) throws NullPointerException {
-		// TODO Auto-generated method stub
-		return false;
+		if (newEntry == null) {
+			throw new NullPointerException();
+		}
+		
+		// if the tree is empty, the new element becomes the root
+		if (this.root == null) {
+			this.root = new BSTreeNode<E>(newEntry);
+			return true;
+		}
+		
+		BSTreeNode<E> current = this.root;
+		
+		while (true) {
+			// use BST ordering to find the correct insertion point
+			int comparison = newEntry.compareTo(current.getElement());
+			
+			if (comparison == 0) {
+				// duplicates are not added to this BST
+				return false;
+			}
+			else if (comparison < 0) {
+				if (current.getLeft() == null) {
+					// insert as the left child when we find an empty spot
+					current.setLeft(new BSTreeNode<E>(newEntry));
+					return true;
+				}
+				current = current.getLeft();
+			}
+			else {
+				if (current.getRight() == null) {
+					// insert as the right child when we find an empty spot
+					current.setRight(new BSTreeNode<E>(newEntry));
+					return true;
+				}
+				current = current.getRight();
+			}
+		}
 	}
 
 	@Override
 	public BSTreeNode<E> removeMin() {
-		// TODO Auto-generated method stub
-		return null;
+		if (this.root == null) {
+			return null;
+		}
+		
+		// if the root has no left child, then the root is already the minimum
+		if (this.root.getLeft() == null) {
+			BSTreeNode<E> removedNode = this.root;
+			this.root = this.root.getRight();
+			removedNode.setLeft(null);
+			removedNode.setRight(null);
+			return removedNode;
+		}
+		
+		BSTreeNode<E> parent = this.root;
+		BSTreeNode<E> current = this.root.getLeft();
+		
+		// keep moving left until current is the smallest node in the tree
+		while (current.getLeft() != null) {
+			parent = current;
+			current = current.getLeft();
+		}
+		
+		// connect the parent to the removed node's right subtree, if any
+		parent.setLeft(current.getRight());
+		current.setLeft(null);
+		current.setRight(null);
+		return current;
 	}
 
 	@Override
 	public BSTreeNode<E> removeMax() {
-		// TODO Auto-generated method stub
-		return null;
+		if (this.root == null) {
+			return null;
+		}
+		
+		// if the root has no right child, then the root is already the maximum
+		if (this.root.getRight() == null) {
+			BSTreeNode<E> removedNode = this.root;
+			this.root = this.root.getLeft();
+			removedNode.setLeft(null);
+			removedNode.setRight(null);
+			return removedNode;
+		}
+		
+		BSTreeNode<E> parent = this.root;
+		BSTreeNode<E> current = this.root.getRight();
+		
+		// keep moving right until current is the largest node in the tree
+		while (current.getRight() != null) {
+			parent = current;
+			current = current.getRight();
+		}
+		
+		// connect the parent to the removed node's left subtree, if any
+		parent.setRight(current.getLeft());
+		current.setLeft(null);
+		current.setRight(null);
+		return current;
 	}
 
 	/**
