@@ -14,7 +14,9 @@
 package implementations;
 
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class WordTracker
 {
@@ -37,13 +39,55 @@ public class WordTracker
 	 * @param args command-line arguments
 	 */
 	public static void main(String[] args) {
-		// TODO: CLI parsing and report output go here
-		// 
-		// Here's the flow for the core logic you'll call:
-		//   BSTree<Word> wordTree = loadTree();
-		//   scanFile(wordTree, inputFilePath);
-		//   saveTree(wordTree);
-		//   printReport(wordTree, printFlag, output);
+		// Validate minimum argument count
+		if (args.length < 2) {
+			System.err.println("Usage: java -jar WordTracker.jar <input.txt> -pf|-pl|-po [-f<output.txt>]");
+			System.exit(1);
+		}
+
+		String inputFilePath = args[0];
+		String printFlag     = args[1];
+
+		// Validate print flag
+		if (!printFlag.equals("-pf") && !printFlag.equals("-pl") && !printFlag.equals("-po")) {
+			System.err.println("Error: print flag must be -pf, -pl, or -po.");
+			System.exit(1);
+		}
+
+		// Check for optional output file argument (-f<filename>)
+		String outputFilePath = null;
+		if (args.length >= 3 && args[2].startsWith("-f")) {
+			outputFilePath = args[2].substring(2); // strip the "-f" prefix
+			if (!outputFilePath.endsWith(".txt")) {
+				outputFilePath = outputFilePath + ".txt";
+			}
+		}
+
+		// Core workflow
+		BSTree<Word> wordTree = loadTree();
+		scanFile(wordTree, inputFilePath);
+		saveTree(wordTree);
+
+		// Set up output stream (console or file)
+		PrintStream output = System.out;
+		if (outputFilePath != null) {
+			try {
+				output = new PrintStream(new FileOutputStream(outputFilePath));
+				System.out.println("Exporting report to: " + outputFilePath);
+			} catch (FileNotFoundException e) {
+				System.err.println("Error: could not open output file - " + outputFilePath);
+				System.exit(1);
+			}
+		}
+
+		printReport(wordTree, printFlag, output);
+
+		// if writing to a file, also print to console so the user can see output
+		if (outputFilePath != null) {
+			printReport(wordTree, printFlag, System.out);
+		} else {
+			System.out.println("Not exporting file.");
+		}
 	}
 	
 	// ======================== Kaley's Section ========================
@@ -160,6 +204,79 @@ public class WordTracker
 	 * @param printFlag the report type (-pf, -pl, or -po)
 	 * @param output    where to write (System.out or a file stream)
 	 */
-	// TODO: public static void printReport(BSTree<Word> wordTree, String printFlag, PrintStream output
+
+	public static void printReport(BSTree<Word> wordTree, String printFlag, PrintStream output) {
+		switch (printFlag) {
+			case "-pf": output.println("Displaying -pf format"); break;
+			case "-pl": output.println("Displaying -pl format"); break;
+			case "-po": output.println("Displaying -po format"); break;
+		}
+
+		utilities.Iterator<Word> it = wordTree.inorderIterator();
+
+		while (it.hasNext()) {
+			Word word = it.next();
+			StringBuilder sb = new StringBuilder();
+			sb.append("Key : ===").append(word.getWord()).append("===  ");
+
+			switch (printFlag) {
+
+				case "-pf": {
+					// unique files only
+					ArrayList<String> uniqueFiles = word.getUniqueFileNames();
+					for (String file : uniqueFiles) {
+						sb.append("found in file: ").append(file).append(", ");
+					}
+					break;
+				}
+
+				case "-pl": {
+					// group line numbers per file
+					sb.append(buildFileLineString(word));
+					break;
+				}
+
+				case "-po": {
+					// file + lines + frequency
+					sb.append("number of entries: ").append(word.getFrequency()).append(" ");
+					sb.append(buildFileLineString(word));
+					break;
+				}
+			}
+
+			output.println(sb.toString());
+		}
+	}
+
+	/**
+	 * Builds a "found in file: X on lines: 1,2,3, found in file: Y on lines: 4,5,"
+	 * string by grouping occurrences per file in the order they were encountered.
+	 *
+	 * @param word the Word whose occurrences to format
+	 * @return formatted file-and-lines string
+	 */
+	private static String buildFileLineString(Word word) {
+		ArrayList<String> fileNames   = word.getFileNames();
+		ArrayList<Integer> lineNumbers = word.getLineNumbers();
+
+		StringBuilder sb = new StringBuilder();
+
+		// collect unique file names preserving order
+		ArrayList<String> seen = new ArrayList<>();
+		for (String f : fileNames) {
+			if (!seen.contains(f)) seen.add(f);
+		}
+
+		for (String file : seen) {
+			sb.append("found in file: ").append(file).append(" on lines: ");
+			for (int i = 0; i < fileNames.size(); i++) {
+				if (fileNames.get(i).equals(file)) {
+					sb.append(lineNumbers.get(i)).append(",");
+				}
+			}
+			sb.append(" ");
+		}
+		return sb.toString();
+	}
 
 }
